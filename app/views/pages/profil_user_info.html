@@ -1,0 +1,60 @@
+<table id="modif_info" class="table">
+	<tr>
+		<td colspan="4" ><b>Changer mes informations</b></td>
+	</tr>
+	<tr>
+		<td style="width:70%">
+			<div class="form-group">
+				<input id="inom" type="text" class="form-control"
+					name="nom" placeholder={{ session['nom'] }}>
+			</div>
+		</td>
+		<td><button id="nom" class="btn btn-default btn-block"
+				onclick="ft_change('nom', 'inom', 'cnom')">
+				Changer de nom</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div class="form-group">
+				<input id="iprenom" type="text" class="form-control"
+					name="prenom" placeholder={{ session['prenom'] }}>
+			</div>
+		</td>
+		<td><button id="prenom" class="btn btn-default btn-block"
+				onclick="ft_change('prenom', 'iprenom', 'cprenom')">
+				Changer de prenom</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div class="form-group">
+				<input id="iemail" type="email" class="form-control"
+					name="email" placeholder={{ session['email'] }}>
+			</div>
+		</td>
+		<td><button id="email" class="btn btn-default btn-block"
+				onclick="ft_change('email', 'iemail', 'cemail')">
+				Changer d'email</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div class="form-group">
+				<input id="ipw" type="password" class="form-control"
+					name="pw" placeholder="new password">
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div class="form-group">
+				<input id="iconfirm_pw" type="password" class="form-control"
+					name="confirm_pw" placeholder="confirm password">
+			</div>
+		</td>
+		<td><button id="pw" class="btn btn-default btn-block">
+				Changer mon mdp</button>
+		</td>
+	</tr>
+</table>

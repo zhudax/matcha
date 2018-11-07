@@ -1,0 +1,61 @@
+<script>
+
+function changeForgotPass()
+{
+    var url = "{{path_for('forgot')}}";
+    var data = "uid={{info['uid']}}"
+        + "&cle={{info['cle']}}"
+        + "&pw=" + ft_getId('pw').value
+        + "&cpw=" + ft_getId('cpw').value
+        + "&submit=submit";
+
+    ft_ajax(url, data, function(response)
+    {
+        if (response == "Error")
+        {
+            ft_getId('sinfo').parentNode.className = "alert alert-danger";
+            ft_getId('sinfo').innerText = "Erreur! Votre mot de passe n'a pas été changé!";
+        }
+        else
+        {
+            var res = JSON.parse(response);
+            var error = 0;
+            for (var i in res)
+            {
+                if (i != "cle")
+                {
+                    ft_getId('s' + i).innerText = "";
+                    ft_getId(i).value = "";
+                    ft_getId(i).parentNode.className = "form-group has-success";
+                }
+                if (res[i] != 0)
+                    error = 1;
+            }
+            if (error)
+            {
+                for (var i in res)
+                {
+                    if (i == "cle" && res[i] != 0)
+                    {
+                        ft_getId('sinfo').parentNode.className = "alert alert-danger";
+                        ft_getId('sinfo').innerText = res[i];
+                    }
+                    else
+                    {
+                        ft_getId(i).parentNode.className = "form-group has-error";
+                        if (res[i] != 0)
+                            ft_getId('s' + i).innerText = res[i];
+                    }
+                }
+            }
+            else
+            {
+                ft_getId('sinfo').parentNode.className = "alert alert-success";
+                ft_getId('sinfo').innerText = "Votre mot de passe a bien été changé!";
+            }
+        }
+        setTimeout("ft_delalert('sinfo')", 3000);
+    });
+}
+
+</script>

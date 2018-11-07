@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<div>
+	<span id='sinfo' class="help-block"></span>
+</div>
+<div class="form-group">
+	<label>Login</label>
+	<input id='login' type="text" class="form-control" name="login"
+		placeholder="Login" />
+	<span id='slogin' class="help-block"><span>
+</div>
+<div class="form-group">
+	<label>Password</label>
+	<input id='pw' type="password" class="form-control" name="pw"
+		placeholder="Password" />
+	<span id="spw" class="help-block"></span>
+</div>
+<div class="form-group">
+	<input id='submit' onclick="sendSignin()" type="button"
+		class="btn btn-default" value="connecter" name="signin" />
+	<input type="button"
+		class="btn btn-default" value="mot de passe oublier" name="signin"
+		onclick="ft_show_pw_change()" />
+</div>
+<div id="show_pw_change" style="display:none;">
+	<div class="form-group">
+		<label>E-mail d'inscription</label>
+		<input id='email' type="email" class="form-control" name="email"
+			placeholder="Email d'inscription" />
+		<span id="semail" class="help-block"></span>
+	</div>
+	<div class="form-group">
+		<input type="button" class="btn btn-default"
+			value="Envoyer un mail de reinitialisation" name="signup"
+			onclick="ft_sendemail()" />
+	</div>
+</div>
+
+{% include 'js/signin.js.html' %}
+
+{% endblock %}

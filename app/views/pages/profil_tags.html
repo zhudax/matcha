@@ -1,0 +1,35 @@
+<table id="table_tag" class="table table-bordered table-condensed">
+	<tr>
+		<td><b>Modifier mes tags</b></td>
+	</tr>
+	<tr>
+		<td>
+			<div class='input-group'>
+				<input id="input_tag" type="text" class="form-control">
+				<div id='div_tag' class='input-group-btn'>
+					<button id='btn_show_tag' class="btn btn-default dropdown-toggle"
+						>Suggestion des tags <span class="caret"></span>
+					</button>
+					<ul id='ul_tag' style='max-height:300px; overflow:auto;' class="dropdown-menu dropdown-menu-right">
+					</ul>
+				</div>
+			</div>
+		</td>
+		<td>
+			<input id="btn_tag" type="button"
+				class="btn btn-default btn-block" value="ajouter">
+		</td>
+	</tr>
+	{% if (info['tags']) %}
+		{% set i = 0 %}
+		{% for i in info['tags'] %}
+			<tr>
+				<td>{{ i['tag'] }}</td>
+				<td>
+					<input type="button" class="btn btn-default btn-block"
+						value="supprimer" onclick='del_tag(this)'/>
+				</td>
+		</tr>
+		{% endfor %}
+	{% endif %}
+</table>

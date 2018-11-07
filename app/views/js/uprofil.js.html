@@ -1,0 +1,81 @@
+<script>
+
+var oBtn_like = ft_getId('btn_like');
+var oSpan_like = ft_getId('span_like');
+var oBtn_bloquer = ft_getId('btn_bloquer');
+var oBtn_report = ft_getId('btn_report');
+
+oBtn_like.onclick = function()
+{
+	var url = " {{path_for('uprofil')}} ";
+	var data = "dst_uid=" + {{info['profil_info']['uid']}};
+	data += (oSpan_like.style.color == 'grey') ? "&action=like" : "&action=unlike";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		if (response != "-1")
+		{
+			oSpan_like.style.color = (oSpan_like.style.color == 'grey') ? 'red' : 'grey';
+			ft_getId('nb_like').innerText = response;
+		}
+	});
+}
+oBtn_bloquer.onclick = function()
+{
+	var url = " {{path_for('uprofil')}} ";
+	var data = "dst_uid=" + {{info['profil_info']['uid']}}
+		+ "&action=bloquer";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		else
+		{
+			if (response == "OK")
+			{
+				ft_getId('sinfo').parentNode.className = "alert alert-success";
+				ft_getId('sinfo').innerText = "Vous avez reussi d'ajoute cette personne dans votre black liste!";
+			}
+			else if (response == "FAIL")
+			{
+				ft_getId('sinfo').parentNode.className = "alert alert-danger";
+				ft_getId('sinfo').innerText = "Cette personne est déjà dans votre black liste!";
+			}
+			setTimeout(function() {ft_redirect("{{path_for('match')}}");}, 1500);
+			return (0);
+		}
+	});
+}
+
+oBtn_report.onclick = function()
+{
+	var url = " {{path_for('uprofil')}} ";
+	var data = "action=report"
+		+ "&dst_uid=" + {{info['profil_info']['uid']}};
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		else
+		{
+			if (response == 'OK')
+			{
+				ft_getId('sinfo').parentNode.className = "alert alert-success";
+				ft_getId('sinfo').innerText = "Vous avez fait une délation contre ce utilisateur";
+			}
+			setTimeout("ft_delalert('sinfo')", 3000);
+			return (0);
+		}
+	});
+}
+</script>

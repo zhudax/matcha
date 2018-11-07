@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+
+body
+{
+    background-image: url("app/public/img/rencontre.jpg");
+}
+
+</style>
+    {% if flash %}
+        {% if flash.error %}
+            <div class="alert alert-danger">
+                {{ flash.error }}
+            </div>
+        {% elseif flash.success %}
+            <div class="alert alert-success">
+                {{ flash.success }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <center>
+        <div class='jumbotron'>
+            {% if session %}
+                <h2>Welecome {{ session['nom'] }} {{ session['prenom'] }}</h2>
+            {% else %}
+                <h2>Vous n'etes pas encore connecter!<h2>
+            {% endif %}
+            <p>Vous etes sur le site de rencontre MATCHA!!!</p>
+            <p>Allez trouver la personne que vous cherchez depuis un moment!</p>
+        </div>
+
+    </center>
+
+
+
+{% endblock %}

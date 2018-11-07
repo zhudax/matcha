@@ -1,0 +1,60 @@
+<table class="table">
+	<tr>
+		<td colspan="10">
+			<b>{{ info['user']['prenom'] }} {{ info['user']['nom'] }}</b>
+		</td>
+	</tr>
+	<tr>
+		<td rowspan="1000">
+			<img id="profil" class="img-thumbnail"
+				{% if info['profil_photo'] %}
+					src="{{ info['profil_photo'] }}"
+				{% else %}
+					src="app/public/img/no_profil.jpeg"
+				{% endif %}
+				alt="profil_photo" style="width:150px; height-max:150px;"/>
+		</td>
+		<td id="genre">Genre: {{ info['profil_info']['genre'] }}</td>
+		<td>Orient_sexuelle: {{ info['profil_info']['orient_sex']}}</td>
+		<td id="age">Age: {{ info['profil_info']['age'] }}</td>
+		<td id="like"><a href="{{path_for('likes')}}?uid={{info['user']['id']}}">Like</a>: <span id="nb_like">{{ info['profil_info']['nb_like'] }}</span></td>
+		<td id="view" colspan="2">
+			<a href="{{path_for('view')}}?uid={{info['user']['id']}}">View</a>: <span id="nb_view">{{ info['profil_info']['nb_view'] }}</span>
+		</td>
+	</tr>
+	{% if(info['adresse']['hidden'] == 'N') %}
+		<tr>
+			<td>Localisation:</td>
+			<td>{{info['adresse']['ville']}}</td>
+			<td>{{info['adresse']['region']}}</td>
+			<td>{{info['adresse']['arrond']}}</td>
+		</tr>
+	{% endif %}
+	<tr><td>Tags d'interet:</td>
+	{% if (info['tags']) %}
+		{% set j = 0 %}
+		{% for i in info['tags'] %}
+			{% if (j % 4 == 0 and j != 0) %}
+				</tr>
+				<tr><td></td>
+			{% endif %}
+			<td>
+				{{ i['tag'] }}
+			</td>
+			{% set j = j + 1 %}
+		{% endfor %}
+	{% endif %}
+	</tr>
+	<tr>
+		<td>derniere connection:</td>
+		{% if info['user']['online'] == 'Y' %}
+			<td colspan="4" id="online">online</td>
+		{% else %}
+			<td colspan="4" id="online">{{ info['user']['last_log'] }}</td>
+		{% endif %}
+	</tr>
+	<tr>
+		<td>Bio:</td>
+		<td id="bio">{{ info['profil_info']['bio']}}</td>
+	</tr>
+</table>

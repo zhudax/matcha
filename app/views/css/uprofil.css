@@ -1,0 +1,29 @@
+#myCarousel
+{
+	width:600px;
+}
+
+#carousel-inner
+{
+	position:relative;
+	height:350px;
+}
+
+#carousel-inner img
+{
+	position:absolute;
+	left:50%;
+	transform:translate(-50%, 0%);
+	height:350px;
+}
+
+#view a, #like a
+{
+	color: black;
+	text-decoration: none;
+}
+
+#view a:hover, #like a:hover
+{
+	color: grey;
+}

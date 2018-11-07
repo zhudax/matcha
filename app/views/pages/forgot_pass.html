@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+<div>
+	<span id='sinfo' class="help-block"></span>
+</div>
+<div class="form-group">
+	<label>Nouveau mot de passe</label>
+	<input id='pw' type="password" class="form-control" name="pw"
+		placeholder="New Password" />
+	<span id="spw" class="help-block"></span>
+</div>
+<div class="form-group">
+	<label>Confirmer nouveau mot de passe</label>
+	<input id='cpw' type="password" class="form-control" name="pw"
+		placeholder="Confirm New Password" />
+	<span id="scpw" class="help-block"></span>
+</div>
+<div class="form-group">
+	<input id='submit' onclick="changeForgotPass()" type="button"
+		class="btn btn-default" value="envoyer" name="forgot_pass" />
+</div>
+
+{% include 'js/forgot_pass.js.html' %}
+
+{% endblock %}

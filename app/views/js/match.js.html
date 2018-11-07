@@ -1,0 +1,256 @@
+<script>
+
+var oOrient_sex = ft_getId('orient_sex');
+var oAge_min = ft_getId('age_min');
+var oAge_max = ft_getId('age_max');
+var oView = ft_getId('view');
+var oLike = ft_getId('like');
+var oDistance = ft_getId('distance');
+var oTag_select = ft_getId('tag_select');
+var oTrie = ft_getId('trie');
+var offset = 0;
+oTag_select.onchange = function()
+{
+    if (oTag_select.value == "spe")
+        ft_getId('list_tag').style.display = "block";
+    else if (oTag_select.value == '0')
+        ft_getId('list_tag').style.display = "none";
+}
+
+//recherche avance
+var oBtnRA = ft_getId('btn_recherche_avance');
+var oTr_btn = ft_getId('tr_btn');
+var oTable_r = ft_getId('table_recherche');
+var aRecherche = document.getElementsByName('recherche');
+
+var i = 0;
+while (i < aRecherche.length)
+{
+    aRecherche[i].onclick = function()
+    {
+        if (this.value == "tout")
+        {
+            ft_getId('trie_tout').style.display = "none";
+            var select = ft_getId('trie').children;
+            select[1].selected = true;
+            ft_getId('td_orient').style.display = "block";
+            ft_getId('btn_submit').style.display = "block";
+            ft_getId('btn_submit_liste').style.display = "none";
+        }
+        else if (this.value == "liste")
+        {
+            ft_getId('trie_tout').style.display = "block";
+            var select = ft_getId('trie').children;
+            select[0].selected = true;
+            ft_getId('btn_submit_liste').style.display = "block";
+            ft_getId('btn_submit').style.display = "none";
+            ft_getId('td_orient').style.display = "none";
+        }
+    }
+    i++;
+}
+
+ft_getId('next').onclick = function()
+{
+    if (this.className != "next disabled")
+        offset = offset + 1;
+    else
+        return (0);
+    if (offset > 0)
+        ft_getId('previous').className = "previous";
+    var i = 0;
+    ft_getId('test').innerText = offset;
+    while (i < aRecherche.length)
+    {
+        if (aRecherche[i].checked == true)
+        {
+            ft_btn_submit(aRecherche[i].value, offset, oTrie.value);
+            break ;
+        }
+        i++;
+    }
+}
+
+ft_getId('previous').onclick = function()
+{
+    if (offset <= 0)
+    {
+        this.className = "previous disabled";
+        return (0);
+    }
+    offset = offset - 1;
+    var i = 0;
+    ft_getId('test').innerText = offset;
+    while (i < aRecherche.length)
+    {
+        if (aRecherche[i].checked == true)
+        {
+            ft_btn_submit(aRecherche[i].value, offset, oTrie.value);
+            break ;
+        }
+        i++;
+    }
+    if (offset <= 0)
+        this.className = "previous disabled";
+}
+
+function ft_btn_submit(action, offset, order)
+{
+    var url = "{{path_for('match')}}";
+    var data =
+        "orient_sex=" + oOrient_sex.value
+        + "&offset=" + offset
+        + "&age_min=" + oAge_min.value
+        + "&age_max=" + oAge_max.value
+        + "&view=" + oView.value
+        + "&like=" + oLike.value
+        + "&localisation=" + oDistance.value
+        + "&order=" + order
+        + "&action=" + action
+    var aCheck_box = ft_getId('list_tag').getElementsByTagName('input');
+    var i = 0;
+    var str = "&tags=";
+    var tags = [];
+    if (oTag_select.value != '0')
+    {
+        while (i < aCheck_box.length)
+        {
+            if (aCheck_box[i].checked == true)
+            {
+                tags.push(aCheck_box[i].value);
+            }
+            i++;
+        }
+    }
+    if (tags.length > 0)
+        data += str + tags;
+    else
+        data += str + "0";
+    ft_ajax(url, data, function(response)
+    {
+        if (response == "Error")
+        {
+            ft_redirect("{{path_for('root')}}");
+            return (0);
+        }
+        else if (response == "ENOUGH")
+        {
+            alert("Pas assez d'info, vous devez remplir votre adresse et avoir au moins un tag!");
+            ft_redirect("{{path_for('profil')}}");
+            return (0);
+        }
+        var get = JSON.parse(response);
+        var j = 0;
+        while (j < get['user'].length)
+        {
+            ft_getId('td' + (j + 1)).style.display = "inline-block";
+            if (get['imgProfil'][j]['img_path'])
+                ft_getId('img' + (j + 1)).src = get['imgProfil'][j]['img_path'];
+            else
+                ft_getId('img' + (j + 1)).src = "app/public/img/no_profil.jpeg";
+            ft_getId('name' + (j + 1)).innerText = get['user'][j]['prenom']
+                + " " + get['user'][j]['nom'];
+            ft_getId('bio' + (j + 1)).innerText = get['profil'][j]['bio'];
+            ft_getId('btn' + (j + 1)).title = "uid=" + get['profil'][j]['uid'];
+            ft_getId('btn' + (j + 1)).href = "/matcha/uprofil?uid=" +
+                get['user'][j]['id'];
+            j++;
+        }
+        if (get['user'].length != 6)
+        {
+            ft_getId('next').className = "next disabled";
+        }
+        else
+        {
+            ft_getId('next').className = "next";
+        }
+        while (j < 6)
+        {
+            ft_getId('td' + (j + 1)).style.display = "none";
+            j++;
+        }
+    });
+}
+
+function show_hide(btn, dst)
+{
+    if (btn.className == "btn btn-default btn-sm")
+    {
+        btn.className = "btn btn-default btn-sm active";
+        dst.style.display = "block";
+    }
+    else
+    {
+        btn.className = "btn btn-default btn-sm";
+        dst.style.display = "none";
+    }
+}
+
+//get curseur position
+function getScrollTop()
+{
+    var scrollTop = 0;
+    if(document.documentElement && document.documentElement.scrollTop)
+        scrollTop = document.documentElement.scrollTop;
+    else if(document.body)
+        scrollTop = document.body.scrollTop;
+    return scrollTop;
+}
+
+//get client height
+function getClientHeight()
+{
+    var clientHeight = 0;
+    if(document.body.clientHeight && document.documentElement.clientHeight)
+        clientHeight = Math.min(document.body.clientHeight,
+            document.documentElement.clientHeight);
+    else
+        clientHeight = Math.max(document.body.clientHeight,
+            document.documentElement.clientHeight);
+    return clientHeight;
+}
+
+//get document height
+function getScrollHeight()
+{
+    return Math.max(document.body.scrollHeight,
+        document.documentElement.scrollHeight);
+}
+
+
+//geo --------------------------------------------------------
+
+function get_position()
+{
+    if (navigator.geolocation)
+    {
+        navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
+    }
+}
+
+function locationSuccess(position)
+{
+    ft_btn_submit("liste", '0', '0');
+    return (0);
+}
+
+function locationError(error)
+{
+    ft_btn_submit("liste", '0', '0');
+    return (0);
+}
+
+function geoip(json)
+{
+    get_position();
+    var url = '{{path_for("match")}}';
+    var data = 'action=get_lat_long'
+        + '&latitude=' + json.latitude
+        + '&longitude=' + json.longitude;
+    ft_ajax(url, data, function(response)
+    {
+    });
+}
+
+</script>
+<script async src="https://get.geojs.io/v1/ip/geo.js"></script>

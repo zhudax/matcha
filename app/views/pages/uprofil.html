@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div>
+	<span id='sinfo' class="help-block"></span>
+</div>
+
+{% include 'pages/uprofil_info.html' %}
+
+{% include 'pages/uprofil_photos.html' %}
+
+{% if info['profil_info']['uid'] != session['uid'] %}
+	{% include 'pages/uprofil_other.html' %}
+	{% include 'js/uprofil.js.html' %}
+{% endif %}
+
+{% endblock %}

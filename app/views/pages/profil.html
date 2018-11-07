@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% include 'pages/profil_info.html' %}
+
+{% include 'pages/profil_tags.html' %}
+
+{% include 'pages/profil_adresse.html' %}
+
+{% include 'pages/profil_user_info.html' %}
+
+{% include 'pages/profil_black_list.html' %}
+
+{% include 'js/profil.js.html' %}
+
+{% include 'pages/google_adresse.html' %}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPsHMZkJ1otnnjKhUs2LqRwR76jbjDzJs&libraries=places&callback=initAutocomplete"
+	async defer>
+</script>
+{% endblock %}

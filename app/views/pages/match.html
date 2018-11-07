@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<table class="table table-condensed" style="margin-bottom:0px;">
+    <tr>
+        <td><button id="btn_recherche_avance" class="btn btn-default btn-sm"
+                onclick="show_hide(this, ft_getId('table_recherche'));">
+                <b>Recherche avancé</b></button></td>
+    </tr>
+</table>
+
+{% include 'pages/match_recherche.html' %}
+
+{% include 'pages/match_user.html' %}
+
+<nav aria-label="...">
+  <ul class="pager">
+    <li id="previous" class="previous disabled">
+        <a>
+            <span aria-hidden="true">&larr;</span> Older
+        </a>
+    </li>
+    <li id="next" class="next">
+        <a>Newer
+            <span aria-hidden="true">&rarr;</span>
+        </a>
+    </li>
+  </ul>
+</nav>
+
+<table style='display:none;'>
+    <tr>
+        <td id="test"></td>
+    </tr>
+</table>
+
+{% include 'js/match.js.html' %}
+
+{% endblock %}

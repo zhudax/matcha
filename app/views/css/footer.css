@@ -1,0 +1,137 @@
+#friendlist
+{
+	display:none;
+	background:white;
+	max-height:380px;
+	width:300px;
+	position:fixed;
+	bottom:50px;
+	right:50px;
+	overflow:auto;
+}
+
+#list-group
+{
+	max-height:340px;
+	width:100%;
+	overflow:auto;
+}
+
+#chat
+{
+	display:none;
+	height:320px;
+	width:300px;
+	position:fixed;
+	bottom:50px;
+	right:360px;
+	background:white;
+}
+
+#close_chat
+{
+	position:absolute;
+	top:5px;
+	right:10px;
+}
+
+#chatarea
+{
+	position:absolute;
+	bottom:2px;
+	height:45px;
+	width:240px;
+	left:5px;
+	resize:none;
+}
+
+#sendbtn
+{
+	position:absolute;
+	bottom:2px;
+	right:2px;
+}
+
+#content
+{
+	width:100%;
+	overflow:hidden;
+}
+
+#end_msg
+{
+	height:0px;
+	overflow:hidden;
+}
+
+#chatbox
+{
+	position:absolute;
+	right:0px;
+	width:100%;
+	max-height:235px;
+	overflow:auto;
+}
+
+#min_fl
+{
+	display:block;
+	position:fixed;
+	bottom:50px;
+	right:10px;
+}
+
+#min_chat
+{
+	display:none;
+	position:fixed;
+	bottom:50px;
+	right:400px;
+}
+
+#dnotif
+{
+	display:none;
+	position:absolute;
+	top:52px;
+	right:113px;
+	max-height:350px;
+	background-color:white;
+	width:300px;
+	overflow:auto;
+	z-index:10;
+}
+
+#copyright
+{
+	min-width: 680px;
+	color: #959d9d;
+	padding-top: 12px;
+	font-size: 18px;
+}
+
+#history_notif
+{
+	background-color: #b2b2b2;
+	border-radius: 5px;
+	margin-top: -20px;
+}
+
+#history_notif a
+{
+	display: block;
+	text-decoration: none;
+	color: black;
+}
+
+#history_notif a:hover
+{
+	border-radius: 5px;
+	background-color: #929292;
+}
+
+
+*:focus
+{
+	outline:none;
+}

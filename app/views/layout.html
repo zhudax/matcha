@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet"
+		href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="app/views/css/header.css">
+	<link rel="stylesheet" href="app/views/css/footer.css">
+	<link rel="stylesheet" href="app/views/css/match.css">
+	<link rel="stylesheet" href="app/views/css/profil.css">
+	<link rel="stylesheet" href="app/views/css/uprofil.css">
+	<link rel="shortcut icon" href="app/public/img/icon.png">
+	<script type="text/javascript" src="app/views/js/tool.js"></script>
+</head>
+
+<body>
+{% include 'pages/header.html' %}
+
+<div class="container" style="margin-bottom: 40px;">
+	{% block content %}{% endblock %}
+</div>
+
+{% include 'pages/footer.html' %}
+
+{% if session %}
+
+{% include 'js/chat.js.html' %}
+
+{% include 'js/notif.js.html' %}
+
+{% endif %}
+</script><script>window.jQuery || document.write('<script src="app/views/js/jquery.min.js"><\/script>')</script>
+<script src="app/views/js/bootstrap.min.js"></script>
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<table id="profil_info" class="table table-bordered">
+	<tr>
+		<td colspan="5"><b>Completer mon profil</b></td>
+	</tr>
+	<tr>
+		<td>Genre:</td>
+		<td colspan="4">
+			<input type="radio" name="genre" value="M"> Homme
+			<input type="radio" name="genre" value="F"> Femme
+		</td>
+	</tr>
+	<tr>
+		<td>Orientation sexuelle:</td>
+		<td colspan="4">
+			<input type="radio" name="orient_sex" value="M"> Homme
+			<input type="radio" name="orient_sex" value="F"> Femme
+			<input type="radio" name="orient_sex" value="ALL"> tout
+		</td>
+	</tr>
+	<tr>
+		<td>Photo de profil</td>
+		<td colspan="4">
+			<input id="photo_profil" type="file" name="photo_profil" accept=".jpg, .jpeg, .png"/>
+		</td>
+	</tr>
+	<tr>
+		<td>Ma photo de profil</td>
+		<td style="position:relative; display:none" colspan="4">
+			<img id="img_profil"
+				{% if (info['profilPhoto']) %}
+					src="{{info['profilPhoto']['img_path']}}"
+				{% endif %}
+				alt="" class="img-thumbnail" />
+			<button id="btn_profil" type="button" class="close ft_close"
+				onclick="del_photo('profil', ft_getId('img_profil').src, this)">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</td>
+	</tr>
+	<tr>
+		<td>Image supplementaire (4 max)</td>
+		<td colspan="4">
+			<input id="photos" type="file" multiple="multiple" name="photos" accept=".jpg, .jpeg, .png"/>
+		</td>
+	</tr>
+	<tr id="btn_img">
+		<td>Mes images</td>
+		<td style="position:relative; display:">
+			<img id="img1" src="" alt="" class="img-thumbnail">
+			<button id="btn_img1" type="button" class="close ft_close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</td>
+		<td style="position:relative; display:none">
+			<img id="img2" src="" alt="" class="img-thumbnail">
+			<button id="btn_img2" type="button" class="close ft_close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</td>
+		<td style="position:relative; display:none">
+			<img id="img3" src="" alt="" class="img-thumbnail">
+			<button id="btn_img3" type="button" class="close ft_close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</td>
+		<td style="position:relative; display:none">
+			<img id="img4" src="" alt="" class="img-thumbnail">
+			<button id="btn_img4" type="button" class="close ft_close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</td>
+	<tr>
+		<td>Bio court</td>
+		<td colspan="4">
+			<textarea id="bio" name="bio" style="resize:none;"
+				class="form-control" rows="4" placeholder="{{info['profil']['bio']}}"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td><input id="submit_img" type="button" class="btn btn-default"
+			 value="Enregistrer" />
+		 </td>
+		 <td colspan="4">
+			 <span id="sinfo" class="help-block"></span>
+		 </td>
+	</tr>
+</table>

@@ -1,0 +1,21 @@
+<table class="table">
+	<tr>
+		<td><b>Blacklist</b></td>
+	</tr>
+	{% if info['blacklist'] %}
+		{% for i in info['blacklist'] %}
+			<tr title="{{i['id']}}">
+				<td>{{i['prenom']}} {{i['nom']}}
+				</td>
+				<td>
+					<input type="button" class="btn btn-default btn-block"
+						value="enlever de mon blacklist" onclick="del_black(this)">
+				</td>
+			</tr>
+		{% endfor %}
+    {% else %}
+        <tr>
+            <td>Votre blacklist est vide !</td>
+        </tr>
+	{% endif %}
+</table>

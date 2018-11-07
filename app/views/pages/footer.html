@@ -1,0 +1,32 @@
+{% if session %}
+	<div id="friendlist">
+		<button id="btnFl" type="button" class="btn btn-primary btn-block">
+			Discussion instantanee</button>
+		<div id="list-group">
+		</div>
+	</div>
+
+	<div id="chat">
+		<button id="dst" type="button" class="btn btn-primary btn-block">
+			Discussion instantanee</button>
+		<button id="close_chat" type="button" class="close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<div id="chatbox">
+			<div id="content"></div>
+		</div>
+	    <textarea id="chatarea" class="form-control"></textarea>
+	    <button id="sendbtn" type="button" class="btn btn-default">
+			<span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+		</button>
+	</div>
+	<button id="min_fl" type="button" class="btn btn-primary">
+		<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+	</button>
+	<button id="min_chat" type="button" class="btn btn-primary">void
+	</button>
+{% endif %}
+
+<footer class="navbar navbar-inverse navbar-static navbar-fixed-bottom">
+	<div class="text-center" id="copyright">© Matcha by lezhang and zxu 2018</div>
+</footer>

@@ -1,0 +1,126 @@
+<div id="table_recherche" style="display:none">
+    <table class="table table-condensed" style="margin-bottom:0px;">
+        <tr>
+            <td>Rechercher dans:</td>
+            <td><input type="radio" name="recherche" value="tout"> tout</td>
+            <td><input type="radio" name="recherche"
+                value="liste" checked=true > liste de suggestion</td>
+        </tr>
+    </table>
+
+    <table class="table table-condensed">
+        <tr>
+            <td colspan="5"><b>Mon match idéal:</b></td>
+        <tr>
+        <tr>
+            <td>Age(e) entre</td>
+            <td>
+                <select id="age_min" name="age_min">
+                    <option selected="selected" value='18' >18</option>
+                    {% for i in 19..99 %}
+                        <option value='{{i}}' >{{i}}</option>
+                    {% endfor %}
+                </select> -
+                <select id="age_max" name="age_max">
+                    <option selected="selected" value='99' >99</option>
+                        {% for i in 98..18 %}
+                            <option value='{{i}}' >{{i}}</option>
+                        {% endfor %}
+                </select>
+            </td>
+            <td id="td_orient" style="display:none">Je recherche:
+                <select id="orient_sex" name="orient_sex">
+                    <option selected='selected' value="0">- tout -</option>
+                    <option value="M">un homme</option>
+                    <option value="F">une femme</option>
+                <select>
+            </td>
+        </tr>
+        <tr>
+            <td>Score de popularite:</td>
+            <td>Nombre de view:</td>
+            <td><select id="view" name="view">
+                <option value='0' >- tout -</option><option value='20' >20+</option>
+                <option value='50' >50+</option><option value='100' >100+</option>
+                <option value='200' >200+</option><option value='500' >500+</option>
+            </select></td>
+            <td>Nombre de like:</td>
+            <td><select id="like" name="like">
+                <option value='0' >- tout -</option><option value='20' >20+</option>
+                <option value='50' >50+</option><option value='100' >100+</option>
+                <option value='200' >200+</option><option value='500' >500+</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>Ses tags:</td>
+            <td>
+                <select id="tag_select">
+                    <option value='0'>- tout -</option>
+                    <option value="spe">- specifier -</option>
+                </select>
+            </td>
+        <td>
+            Intervalle de localisation:
+        </td>
+        <td colspan="2">
+            <select id="distance">
+                <option value='0'>- tout -</option>
+                <option value="5">5Km</option>
+                <option value="10">10Km</option>
+                <option value="20">20Km</option>
+                <option value="50">50Km</option>
+                <option value="100">100Km</option>
+                <option value="200">200Km</option>
+                <option value="500">500Km</option>
+            </select>
+        </td>
+        </tr>
+    </table>
+
+    <table id="list_tag" class="table">
+        <tr>
+        {% if (tags) %}
+            {% set j = 0 %}
+            {% for i in tags %}
+                {% if j % 7 == 0 %}
+                    </tr>
+                    <tr>
+                {% endif %}
+                <td>
+                    <input name="check_tag" type="checkbox" value="{{i['tag']}}">
+                        &nbsp{{i['tag']}}
+                </td>
+                {% set j = j + 1 %}
+            {% endfor %}
+        {% endif %}
+        </tr>
+    </table>
+
+    <table class="table">
+        <tr>
+            <td>Trié par:
+                <select id="trie">
+                    <option id="trie_tout" value="0">tout</option>
+                    <option value="age">age</option>
+                    <option value="view">view</option>
+                    <option value="like">like</option>
+                    <option value="localisation">localisation</option>
+                    <option value="tags">tag en commun</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td id="btn_submit" style="display:none">
+                <input type="button" value="rechercher dans tout"
+                    class="btn btn-default"
+                    onclick="ft_btn_submit('tout', '0', oTrie.value)">
+            </td>
+            <td id="btn_submit_liste">
+                <input type="button"
+                    value="rechercher dans la liste de suggestion"
+                    class="btn btn-default"
+                    onclick="ft_btn_submit('liste', '0', oTrie.value)">
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,90 @@
+<script>
+function sendSignin()
+{
+	var url = "{{path_for('signin')}}";
+	var data =
+		"login=" + ft_getId('login').value
+		+ "&pw=" + ft_getId('pw').value
+		+ "&submit=signin";
+	var elem = ['login', 'pw'];
+	ft_ajax(url, data, function(response)
+	{
+		ft_getId('sinfo').innerText = "";
+		ft_getId('sinfo').parentNode.className = "";
+		if (response == 'OK')
+		{
+			elem.forEach(function(e){
+				ft_getId('s' + e).innerText = "";
+				ft_getId(e).parentNode.className = "form-group";
+				ft_getId(e).value = "";
+			})
+			ft_getId('sinfo').parentNode.className = "alert alert-success";
+			ft_getId('sinfo').innerText = "Bienvenue!";
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		else if (response == 'Error')
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		else if (response == "NOACTIVE")
+		{
+			ft_getId('sinfo').parentNode.className = "alert alert-danger";
+			ft_getId('sinfo').innerText = "Veuillez activer votre compte!";
+			setTimeout("ft_delalert('sinfo')", 3000);
+			return (0);
+		}
+		var res = JSON.parse(response);
+		ft_getId('pw').value = "";
+		for (var i in res)
+		{
+			ft_getId('s' + i).innerText = "";
+			if(res[i] == 0) {
+				ft_getId(i).parentNode.className = "form-group has-success";
+			}
+			else
+			{
+				if (ft_getId('pw').parentNode.className != 'form-group has-error')
+				{
+					ft_getId('pw').parentNode.className = "form-group has-error";
+				}
+				ft_getId(i).parentNode.className = "form-group has-error";
+				ft_getId(i).value = "";
+				ft_getId('s' + i).innerText = res[i];
+			}
+		}
+	});
+}
+function ft_show_pw_change()
+{
+	var oShow_pw_change = ft_getId('show_pw_change');
+	if (oShow_pw_change.style.display != "block")
+		oShow_pw_change.style.display = "block";
+	else {
+		oShow_pw_change.style.display = "none";
+	}
+}
+function ft_sendemail()
+{
+	var oEmail = ft_getId('email');
+	var url = "{{path_for('signin')}}";
+	var data = "action=email_pw"
+		+ "&email=" + oEmail.value;
+	oEmail.value = "";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "OK")
+		{
+			ft_getId('sinfo').parentNode.className = "alert alert-success";
+			ft_getId('sinfo').innerText = "Un mail de reinitialisation a été envoyé!";
+		}
+		else
+		{
+			ft_getId('sinfo').parentNode.className = "alert alert-danger";
+			ft_getId('sinfo').innerText = response;
+		}
+		setTimeout("ft_delalert('sinfo')", 3000);
+	});
+}
+</script>

@@ -1,0 +1,63 @@
+<nav class="navbar navbar-inverse navbar-static" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+			  <span class="sr-only">Toggle navigation</span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			</button>
+			<a href="{{path_for('root')}}" class="navbar-brand">Matcha</a>
+			{% if session %}
+				<ul id="navbtn" class="nav nav-pills">
+					<li>
+						<a href="{{path_for('uprofil')}}">
+							<span class="glyphicon glyphicon-user"
+								aria-hidden="true"></span>
+						</a>
+					</li>
+					<li>
+						<a id="notif" onclick="ft_oNotif();">
+							<span class="glyphicon glyphicon-bell"
+								aria-hidden="true"></span>
+							{% if session['numNotif'] %}
+								<span id="badge" class="badge">
+									{{session['numNotif']}}</span>
+							{% endif %}
+						</a>
+					</li>
+					<li>
+						<a href="{{path_for('profil')}}">
+							<span class="glyphicon glyphicon-cog"
+								aria-hidden="true"></span>
+						</a>
+					</li>
+					<li data-toggle="tooltip" data-placement="bottom" title="Logout">
+						<a href="{{path_for('logout')}}">
+							<span class="glyphicon glyphicon-off" aria-hidden="true">
+							</span>
+						</a>
+					</li>
+				</ul>
+			{% endif %}
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul id="navbar" class="nav navbar-nav">
+				<li><a href="{{path_for('contact')}}">Contact</a></li>
+				{% if not session %}
+					<li><a href="{{path_for('signin')}}">Sign in</a></li>
+					<li><a href="{{path_for('signup')}}">Sign up</a></li>
+				{% else %}
+					<li><a href="{{path_for('match')}}">Match</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</nav>
+<div id="dnotif">
+	<ul id="ul1" class="list-group">
+	</ul>
+	<center id="history_notif"><a href='{{path_for("notifs")}}'>
+		Voir l'historique
+	</a></center>
+</div>

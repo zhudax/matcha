@@ -1,0 +1,15 @@
+#profil_match td
+{
+    width:30%;
+    padding:0px 20px 0px 20px;
+}
+
+#profil_match td > div > div > img
+{
+    height:20vmin;
+}
+
+#list_tag
+{
+    display:none;
+}

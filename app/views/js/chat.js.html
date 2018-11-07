@@ -1,0 +1,209 @@
+<script>
+
+var oChat = ft_getId('chat');
+var oClose_chat = ft_getId('close_chat');
+var oBtnsend = ft_getId('sendbtn');
+var oChatarea = ft_getId('chatarea');
+var oContent = ft_getId('content');
+var oDst = ft_getId('dst');
+var oFl = ft_getId('friendlist');
+var aFl = oFl.getElementsByTagName('a');
+var oEnd = ft_getId('end_msg');
+var oBox = ft_getId('chatbox');
+var oBtnfl = ft_getId('btnFl');
+var oMin_chat = ft_getId('min_chat');
+var oMin_fl = ft_getId('min_fl');
+var oGet = ft_getId('get');
+var get_message = setInterval('getMessage()', 1000);
+clearInterval(get_message);
+
+oDst.onclick = function()
+{
+	this.parentNode.style.display = "none";
+	oMin_chat.style.display = "block";
+	clearInterval(get_message);
+}
+
+oMin_chat.onclick = function()
+{
+	get_message = setInterval('getMessage()', 1000);
+	this.style.display = "none";
+	oChat.style.display = "block";
+}
+
+oBtnfl.onclick = function()
+{
+	this.parentNode.style.display = "none";
+	oMin_fl.style.display = "block";
+	ft_getId('list-group').innerHTML = '';
+}
+
+oMin_fl.onclick = function()
+{
+	ft_get_friends();
+	this.style.display = "none";
+	oFl.style.display = "block";
+}
+
+oClose_chat.onclick = function()
+{
+	oChat.style.display = "none";
+	clearInterval(get_message);
+}
+
+//friend list
+
+function	ft_get_friends()
+{
+	var url = "app/controllers/refreshInfo.php";
+	ft_ajax(url, "action=get_friends", function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		if (response != '0')
+		{
+			var get = JSON.parse(response);
+			var i = 0;
+			while (i < get.length)
+			{
+				var cA = document.createElement('a');
+				cA.title = get[i]['login'];
+				cA.className = "list-group-item";
+				cA.innerText = get[i]['prenom'] + " " + get[i]['nom'];
+				ft_getId('list-group').appendChild(cA);
+				i++;
+			}
+			fl_onclick();
+		}
+	});
+}
+
+function fl_onclick()
+{
+	var oFl = ft_getId('friendlist');
+	var aFl = oFl.getElementsByTagName('a');
+	var j = 0;
+	while (j < aFl.length)
+	{
+		aFl[j].onclick = function(response)
+		{
+			if (response == "Error")
+			{
+				ft_redirect("{{path_for('root')}}");
+				return (0);
+			}
+			oDst.innerText = this.innerText;
+			oDst.title = this.title;
+			oMin_chat.innerText = this.innerText;
+			oMin_chat.style.display = "none";
+			oContent.innerText = "";
+			var url = "app/controllers/refreshInfo.php";
+			var data = "src=" + "{{session['login']}}"
+				+ "&dst=" + this.title
+				+ "&action=get_history";
+			ft_ajax(url, data, function(response)
+			{
+				if (response == "Error")
+				{
+					ft_redirect("{{path_for('root')}}");
+					return (0);
+				}
+				var get = JSON.parse(response);
+				var i = 0;
+				while (i < get.length)
+				{
+					var cA = document.createElement('span');
+					cA.className = "panel panel-default";
+					cA.style['max-width'] = "200px";
+					cA.style.overflow = "auto";
+					cA.style.clear = "both";
+					cA.style.padding = "3px";
+					cA.style.margin = "3px 10px";
+					if (get[i]['src_id'] == {{session['uid']}})
+					{
+						cA.className = "panel panel-primary";
+						cA.style.float = "right";
+						cA.innerText = get[i]['message'];
+					}
+					else
+					{
+						cA.style.float = "left";
+						cA.innerText = oDst.innerText + ":\n" + get[i]['message'];
+					}
+					oContent.appendChild(cA);
+					i++;
+				}
+				oBox.scrollTop = oContent.clientHeight;
+			});
+			oChat.style.display = "block";
+			get_message = setInterval('getMessage()', 1000);
+		}
+		j++;
+	}
+}
+
+oBtnsend.onclick = function()
+{
+	var url = "app/controllers/refreshInfo.php";
+	var data = "message=" + oChatarea.value
+		+ "&dst=" + oDst.title
+		+ "&src=" + {{session['uid']}}
+		+ "&action=save_message";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		var cA = document.createElement('span');
+		cA.style.padding = "3px";
+		cA.style.margin = "3px 10px";
+		cA.style.overflow = "auto";
+		cA.className = "panel panel-primary";
+		cA.style.clear = "both";
+		cA.style['max-width'] = "200px";
+		cA.style.float = "right";
+		cA.innerText = oChatarea.value;
+		oContent.appendChild(cA);
+		oBox.scrollTop = oContent.clientHeight;
+		oChatarea.value = "";
+	});
+}
+
+function	getMessage()
+{
+	var url = "app/controllers/refreshInfo.php";
+	var data = "src=" + oDst.title
+		+ "&dst=" + {{session['uid']}}
+		+ "&action=read_message";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			return (0);
+		}
+		var get = JSON.parse(response);
+		var i = 0;
+		while (i < get.length)
+		{
+			var cA = document.createElement('span');
+			cA.style.overflow = "auto";
+			cA.style.padding = "3px";
+			cA.style.margin = "3px 10px";
+			cA.className = "panel panel-default";
+			cA.style.clear = "both";
+			cA.style['max-width'] = "200px";
+			cA.style.float = "left";
+			cA.innerText = oDst.innerText + ":\n" + get[i]['message'];
+			oContent.appendChild(cA);
+			oBox.scrollTop = oContent.clientHeight;
+			i++;
+		}
+	});
+}
+
+</script>

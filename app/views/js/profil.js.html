@@ -1,0 +1,527 @@
+<script>
+var oGenre = ft_getId('genre');
+var oPhoto_profil = ft_getId('photo_profil');
+var oPhotos = ft_getId('photos');
+var oBio = ft_getId('bio');
+var oSubmit_img = ft_getId('submit_img');
+var oSubmit_adresse = ft_getId('submit_adresse');
+var aGenre = document.getElementsByName('genre');
+var aOrient_sex = document.getElementsByName('orient_sex');
+var aHidden = document.getElementsByName('hidden');
+var oSinfo = ft_getId('sinfo');
+var oTr_hidden = ft_getId('tr_hidden');
+var oInput_tag = ft_getId('input_tag');
+var oDiv_tag = ft_getId('div_tag');
+var oBtn_show_tag = ft_getId('btn_show_tag');
+var oUl_tag = ft_getId('ul_tag');
+
+function del_black(obj)
+{
+	var url = "{{path_for('profil')}}";
+	var data = "action=del_black_list"
+		+ "&value=" + obj.parentNode.parentNode.title;
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		if (response == "OK")
+		{
+			obj.parentNode.parentNode.parentNode.
+				removeChild(obj.parentNode.parentNode);
+		}
+	});
+}
+
+function ft_change(src, dst, action)
+{
+	var oSrc = ft_getId(src);
+	var oDst = ft_getId(dst);
+	var url = "{{path_for('profil')}}";
+	var data = "action=" + action
+			+ "&value=" + oDst.value;
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		if (response == 'OK')
+		{
+			oDst.parentNode.className = "form-group has-success";
+			oDst.placeholder = oDst.value;
+			oDst.value = "";
+		}
+		else {
+			oDst.parentNode.className = "form-group has-error";
+			oDst.placeholder = response;
+			oDst.value = "";
+		}
+	});
+}
+
+var oPw = ft_getId('pw');
+oPw.onclick = function()
+{
+	var oIpw = ft_getId('ipw');
+	var oIconfirm_pw = ft_getId('iconfirm_pw');
+	var url = "{{path_for('profil')}}";
+	var data = "action=cpw"
+		+ "&pw1=" + oIpw.value
+		+ "&pw2=" + oIconfirm_pw.value;
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		if (response == "OK")
+		{
+			oIpw.placeholder = "Votre mdp a bien été changer";
+			oIconfirm_pw.placeholder = "Votre mdp a bien été changer";
+			oIpw.parentNode.className = "form-group has-success";
+			oIconfirm_pw.parentNode.className = "form-group has-success";
+		}
+		else {
+			oIpw.parentNode.className = "form-group has-error";
+			oIconfirm_pw.parentNode.className = "form-group has-error";
+			oIpw.placeholder = response;
+			oIconfirm_pw.placeholder = response;
+		}
+		oIpw.value = "";
+		oIconfirm_pw.value = "";
+	});
+}
+
+function show_photo()
+{
+	var url = "{{path_for('profil')}}";
+	var data = "action=photo";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		var oImg_profil = ft_getId('img_profil');
+		var get = JSON.parse(response);
+		if (get.profil && get.profil.length > 0)
+		{
+			var url1 = "{{path_for('profil')}}";
+			var data1 = "action=profil&path=" + get.profil;
+			oImg_profil.src = get.profil;
+			oImg_profil.parentNode.style.display = "block";
+			var oBtn_profil = ft_getId('btn_profil');
+			oBtn_profil.onclick = function()
+			{
+				oImg_profil.src = "";
+				oImg_profil.parentNode.style.display = "none";
+				ft_ajax(url1, data1, function(response1)
+				{
+					if (response1 == "Error")
+					{
+						ft_redirect("{{path_for('root')}}");
+						return (0);
+					}
+				});
+			}
+		}
+		if (get['photos'])
+		{
+			var url1 = "{{path_for('profil')}}";
+			var oBtn_img = ft_getId("btn_img");
+			var aBtn_img = oBtn_img.getElementsByTagName('button');
+			var i = 0;
+			while (i < get['photos'].length)
+			{
+				aBtn_img[i].parentNode.style.display = "block";
+				var oImg = ft_getId('img' + (i + 1));
+				oImg.src = get['photos'][i];
+				(function(i)
+				{
+					 aBtn_img[i].onclick = function()
+					 {
+						var data2 = "action=img&path=" + get['photos'][i];
+						var oImg = ft_getId('img' + (i + 1));
+						oImg.src = "";
+						ft_ajax(url1, data2, function(response2)
+						{
+							if (response2 == "Error")
+							{
+								ft_redirect("{{path_for('root')}}");
+								return (0);
+							}
+							if (response2 == "OK")
+								aBtn_img[i].parentNode.style.display = "none";
+						});
+					 }
+			 	})(i);
+				i++;
+			}
+			while (i < 4)
+			{
+				aBtn_img[i].parentNode.style.display = "none";
+				i++;
+			}
+		}
+	});
+}
+show_photo();
+
+function ft_show_info()
+{
+	if ("{{ info['profil']['genre'] }}" == 'M')
+		aGenre[0].checked = true;
+	else if ("{{ info['profil']['genre'] }}" == 'F')
+		aGenre[1].checked = true;
+	if ("{{ info['profil']['orient_sex'] }}" == 'M')
+		aOrient_sex[0].checked = true;
+	else if ("{{ info['profil']['orient_sex'] }}" == 'F')
+		aOrient_sex[1].checked = true;
+	else if ("{{ info['profil']['orient_sex'] }}" == 'ALL')
+		aOrient_sex[2].checked = true;
+	if ("{{ info['adresse']['hidden'] }}" == 'N')
+		aHidden[0].checked = true;
+	else if ("{{ info['adresse']['hidden'] }}" == 'Y')
+		aHidden[1].checked = true;
+	if ("{{ info['adresse']['id'] }}")
+	{
+		oTr_hidden.style.display = '';
+	}
+}
+ft_show_info();
+
+var i = 0;
+while (i < aHidden.length)
+{
+	aHidden[i].onclick = function()
+	{
+		var url = "{{path_for('profil')}}";
+		var data = "action=hidden"
+			+ "&value=" + this.value;
+		ft_ajax(url, data, function(response)
+		{
+			if (response != 'NO' && response != 'OK')
+			{
+				ft_getId('s_adresse_info').parentNode.className = "alert alert-success";
+				ft_getId('s_adresse_info').innerText = response;
+				setTimeout("ft_delalert('s_adresse_info')", 3000);
+			}
+			else if (response == 'NO')
+			{
+				ft_getId('s_adresse_info').parentNode.className = "alert alert-danger";
+				ft_getId('s_adresse_info').innerText = "Vous devez remplir d'abord votre adresse !";
+				setTimeout("ft_delalert('s_adresse_info')", 3000);
+			}
+			else if (response == 'Error')
+			{
+				ft_redirect("{{path_for('root')}}");
+				return (0);
+			}
+		});
+	}
+	i++;
+}
+
+function	del(path, obj)
+{
+	var url = "{{path_for('profil')}}";
+	var data = "path=" + path
+		+ "&action=img";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+	});
+	obj.parentNode.parentNode.removeChild(obj.parentNode);
+}
+
+//del photo
+function del_photo(action, path, obj)
+{
+	var url = "{{path_for('profil')}}";
+	var data = "path=" + path
+		+ "&action=" + action;
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		if (response == 'OK')
+			obj.parentNode.parentNode.removeChild(obj.parentNode);
+	});
+}
+
+//tag
+var oTable_tag = ft_getId('table_tag');
+var oInput_tag = ft_getId('input_tag');
+var oBtn_tag = ft_getId('btn_tag');
+function del_tag(obj)
+{
+	var url = "{{path_for('profil')}}";
+	var data = "action=del_tag"
+		+ "&value=" + obj.parentNode.parentNode.cells[0].innerText;
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+	});
+	obj.parentNode.parentNode.parentNode.
+		removeChild(obj.parentNode.parentNode);
+}
+
+oBtn_tag.onclick = function()
+{
+	if (oInput_tag.value == "")
+	{
+		oInput_tag.placeholder = "tag vide";
+		return (0);
+	}
+	var url = "{{path_for('profil')}}";
+	var data = "action=add_tag"
+		+ "&value=" + oInput_tag.value;
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		if (response == "OK")
+		{
+			var tr = oTable_tag.insertRow(2);
+			var td1 = tr.insertCell();
+			td1.innerText = "#" + oInput_tag.value;
+			oInput_tag.value = "";
+			oInput_tag.placeholder = "";
+			var td2 = tr.insertCell();
+			var cInput = document.createElement('input');
+			cInput.type = "button";
+			cInput.className = "btn btn-default btn-block";
+			cInput.value = "supprimer";
+			cInput.onclick = function()
+			{
+				var url2 = "{{path_for('profil')}}";
+				var data2 = "action=del_tag"
+					+ "&value=" + cInput.parentNode.parentNode.cells[0].innerText;
+				ft_ajax(url2, data2, function(response2)
+				{
+					if (response2 == "OK")
+					{
+						cInput.parentNode.parentNode.parentNode.
+							removeChild(cInput.parentNode.parentNode);
+					}
+					else if (response2 == "Error")
+					{
+						ft_redirect("{{path_for('root')}}");
+						return (0);
+					}
+				});
+			};
+			td2.appendChild(cInput);
+		}
+		else
+		{
+			oInput_tag.placeholder = response;
+			oInput_tag.value = "";
+		}
+	});
+}
+
+oSubmit_img.onclick = function()
+{
+	var oBtn_img = ft_getId("btn_img");
+	var aBtn_img = oBtn_img.getElementsByTagName('button');
+	var len = 0;
+	var i = 0;
+	while (i < aBtn_img.length)
+	{
+		if (aBtn_img[i].parentNode.style.display == "block")
+		{
+			len++;
+		}
+		i++;
+	}
+	var target1 = document.querySelector("#photo_profil").files[0];
+	if (target1 && target1.type != "image/jpeg" && target1.type != "image/png")
+	{
+		ft_getId('photo_profil').value = "";
+		ft_getId('sinfo').parentNode.className = "alert alert-danger";
+		ft_getId('sinfo').innerText = "Vous ne pouvez upload que des images de type jpeg/jpg ou png!";
+		setTimeout("ft_delalert('sinfo')", 3000);
+		return (0);
+	}
+	var target2 = document.querySelector("#photos").files;
+	if (parseInt(target2.length) + len > 4)
+	{
+		ft_getId('photos').value = "";
+		ft_getId('sinfo').parentNode.className = "alert alert-danger";
+		ft_getId('sinfo').innerText = "Vous ne pouvez upload en maximum 4 photos";
+		setTimeout("ft_delalert('sinfo')", 3000);
+		return (0);
+	}
+	for (i = 0; i < target2.length; i++)
+	{
+		if (target2[i].type != "image/jpeg" && target2[i].type != "image/png")
+		{
+			ft_getId('photos').value = "";
+			ft_getId('sinfo').parentNode.className = "alert alert-danger";
+			ft_getId('sinfo').innerText = "Vous ne pouvez upload que des images de type jpeg/jpg ou png!";
+			setTimeout("ft_delalert('sinfo')", 3000);
+			return (0);
+		}
+	}
+	var oAjax = ft_new_ajax();
+	if(!oAjax)
+		return (0);
+	var url = "{{path_for('profil')}}";
+	var formdata = new FormData();
+	var i = 0;
+	while (i < aGenre.length)
+	{
+		if (aGenre[i].checked == true)
+		{
+			formdata.append("genre", aGenre[i].value);
+			break;
+		}
+		i++;
+	}
+	var j = 0;
+	while (j < aOrient_sex.length)
+	{
+		if (aOrient_sex[j].checked == true)
+		{
+			formdata.append("orient_sex", aOrient_sex[j].value);
+			break;
+		}
+		j++;
+	}
+	formdata.append("bio", oBio.value);
+	formdata.append("photo_profil", target1);
+	formdata.append("action", "change_info");
+	var k = 0;
+	while (k < target2.length)
+	{
+		formdata.append("photos" + k, target2[k]);
+		k++;
+	}
+	oAjax.open('post', url, true);
+	oAjax.onreadystatechange = function()
+	{
+		if (oAjax.readyState == 4 && oAjax.status == 200)
+		{
+			get = oAjax.responseText;
+			if (get == "Error")
+			{
+				ft_redirect("{{path_for('root')}}");
+				return (0);
+			}
+			if (get == "OK")
+			{
+				oBio.placeholder = oBio.value;
+				oBio.value = "";
+				ft_getId('photo_profil').value = "";
+				ft_getId('photos').value = "";
+				ft_getId('sinfo').parentNode.className = "alert alert-success";
+				ft_getId('sinfo').innerText = "Votre profil a bien ete modifier";
+				setTimeout("ft_delalert('sinfo')", 3000);
+				show_photo();
+			}
+		}
+	}
+	oAjax.send(formdata);
+}
+
+oSubmit_adresse.onclick = function()
+{
+	var oRue = ft_getId('street_number');
+	var oRoute = ft_getId('route');
+	var oVille = ft_getId('locality');
+	var oRegion = ft_getId('administrative_area_level_1');
+	var oCp = ft_getId('postal_code');
+	var oPays = ft_getId('country');
+	var oLatitude = ft_getId('latitude');
+	var oLongitude = ft_getId('longitude');
+	var url = "{{path_for('profil')}}";
+	var data = "num=" + oRue.value
+		+ "&rue=" + oRoute.value
+		+ "&ville=" + oVille.value
+		+ "&region=" + oRegion.value
+		+ "&cp=" + oCp.value
+		+ "&pays=" + oPays.value
+		+ "&latitude=" + oLatitude.value
+		+ "&longitude=" + oLongitude.value
+		+ "&action=cadresse";
+	ft_ajax(url, data, function(response)
+	{
+		if (response == "Error")
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		else if (response == "NOVALIDE")
+		{
+			ft_getId('s_adresse_info').parentNode.className = "alert alert-danger";
+			ft_getId('s_adresse_info').innerText = "L'adresse n'est pas valide, vous devez rentrez une adresse avec code postal!";
+			setTimeout("ft_delalert('s_adresse_info')", 3000);
+		}
+		else if (response == "OK")
+		{
+			ft_getId('s_adresse_info').parentNode.className = "alert alert-success";
+			ft_getId('s_adresse_info').innerText = "Votre nouveau adresse a bien ete enregistrer";
+			setTimeout("ft_delalert('s_adresse_info')", 3000);
+		}
+	});
+	oTr_hidden.display = '';
+	this.setAttribute('disabled', 'true');
+}
+
+oInput_tag.onkeyup = function()
+{
+	oUl_tag.innerHTML = '';
+	{% set i = 0 %}
+	{% for i in info['all_tags'] %}
+		if ("{{ i['tag'] }}".search(oInput_tag.value) != -1)
+		{
+			var cLi = document.createElement('li');
+			var cA = document.createElement('a');
+			cA.href = 'javascript:void(0)';
+			cA.innerText = "{{ i['tag'] }}";
+			cA.onclick = function()
+			{
+				oInput_tag.value = this.innerText.substr(1);
+			}
+			cLi.appendChild(cA);
+			oUl_tag.appendChild(cLi);
+		}
+	{% endfor %}
+}
+
+oInput_tag.onclick = function()
+{
+	oDiv_tag.className = 'input-group-btn open';
+}
+oBtn_show_tag.onclick = function(){show_hide();}
+
+function	show_hide()
+{
+	if (oDiv_tag.className == 'input-group-btn open')
+		oDiv_tag.className = 'input-group-btn';
+	else
+		oDiv_tag.className = 'input-group-btn open';
+}
+
+</script>

@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div>
+        <span id='sinfo' class="help-block"></span>
+    </div>
+
+    <h1>Dites nous des conseils!</h1>
+
+    <div class="form-group">
+        <label for="name">Votre nom</label>
+        <input id="name" type="text" class="form-control" name="name">
+        <span id="sname" class="help-block"></span>
+    </div>
+    <div class="form-group">
+        <label for="email">Votre email</label>
+        <input id="email" type="email" class="form-control" name="email" value="{{ old.email }}">
+        <span id="semail" class="help-block"></span>
+    </div>
+    <div class="form-group">
+        <label for="content">Votre message</label>
+        <textarea id="content" type="text" class="form-control" name="content" style='height:500px; resize:none; overflow:auto'>{{ old.content }}</textarea>
+        <span id="scontent" class="help-block"></span>
+    </div>
+    <div class="form-group">
+        <input id='btn_envoyer' type="submit" class="btn btn-primary" value="Envoyer">
+    </div>
+
+    <script>
+        var oName = ft_getId('name');
+        var oEmail = ft_getId('email');
+        var oContent = ft_getId('content');
+        var oBtn_envoyer = ft_getId('btn_envoyer');
+
+        oBtn_envoyer.onclick = function()
+        {
+            var url = '{{path_for("contact")}}';
+            var data = 'action=advice'
+                + '&name=' + oName.value
+                + '&email=' + oEmail.value
+                + '&content=' + oContent.value;
+            ft_ajax(url, data, function(response)
+            {
+                oName.value = "";
+                oEmail.value = "";
+                oContent.value = "";
+                ft_getId('sname').innerText = "";
+                ft_getId('semail').innerText = "";
+                ft_getId('scontent').innerText = "";
+                if (response == "Error")
+                {
+                    ft_getId('sinfo').parentNode.className = "alert alert-danger";
+    				ft_getId('sinfo').innerText = "Une erreur s'est passée! Votre message n'a pas été transmis!";
+                }
+                else if (response == "OK")
+                {
+                    ft_getId('sinfo').parentNode.className = "alert alert-success";
+    				ft_getId('sinfo').innerText = "Votre message a été transmis! Merci de votre conseil!";
+                    ft_getId('sname').parentNode.className = "form-group has-success";
+                    ft_getId('semail').parentNode.className = "form-group has-success";
+                    ft_getId('scontent').parentNode.className = "form-group has-success";
+                }
+                else
+                {
+                    ft_getId('sinfo').parentNode.className = "alert alert-danger";
+    				ft_getId('sinfo').innerText = "Une erreur s'est passée! Votre message n'a pas été transmis!";
+                    var res = JSON.parse(response);
+                    for (var i in res)
+                    {
+                        ft_getId(i).parentNode.className = "form-group has-success"
+                        if (res[i] != 0)
+                        {
+                            ft_getId(i).parentNode.className = "form-group has-error";
+                            ft_getId('s' + i).innerText = res[i];
+                        }
+                    }
+                }
+                setTimeout("ft_delalert('sinfo')", 3000);
+            });
+        }
+    </script>
+{% endblock %}

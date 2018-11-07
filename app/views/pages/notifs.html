@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+{% if users %}
+
+    {% for user in users %}
+        <p><a href="{{path_for('uprofil')}}?uid={{user['uid']}}">
+            <img style="height:100px; width:100px;" class="img-thumbnail"
+            {% if user['profil'] %}
+                src="{{user['profil']}}"
+            {% else %}
+                src="app/public/img/no_profil.jpeg"
+            {% endif %}
+        /></a>
+        {{user['notif']}}
+        </p>
+    {% endfor %}
+
+{% else %}
+
+    <p>Pas de notif!</p>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,74 @@
+<table class="table table-bordered">
+	<tr><td colspan="5"><b>Ajouter ou motifier mon adresse domicile</b></td></tr>
+	<tr>
+		<td>Addresse:</td>
+		<td colspan="4"><input id="autocomplete" onFocus="geolocate()"
+				class="form-control" placeholder="Entrer votre adresse"
+				type="text">
+			</input>
+		</td>
+	</tr>
+	<tr>
+		<td>Rue:</td>
+		<td>
+			<input id="street_number" class="form-control"
+				placeholder="{{ info['adresse']['num'] }}" readonly />
+		</td>
+		<td colspan="3">
+			<input id="route" class="form-control"
+				placeholder="{{ info['adresse']['rue'] }}" readonly />
+		</td>
+	</tr>
+	<tr>
+		<td>Ville:</td>
+		<td colspan="4">
+			<input id="locality" class="form-control"
+				placeholder="{{ info['adresse']['ville'] }}" readonly />
+		</td>
+	</tr>
+	<tr>
+		<td>Region:</td>
+		<td colspan="2">
+			<input id="administrative_area_level_1"
+				placeholder="{{ info['adresse']['region'] }}" class="form-control"
+				readonly />
+		</td>
+		<td>Code postal:</td>
+		<td>
+			<input id="postal_code" class="form-control"
+				placeholder="{{ info['adresse']['arrond'] }}" readonly />
+		</td>
+	</tr>
+	<tr>
+		<td>Pays:</td>
+		<td colspan="4">
+			<input id="country" class="form-control"
+				placeholder="{{ info['adresse']['pays'] }}" readonly />
+		</td>
+	</tr>
+	<tr style='display:none;'>
+		<td>Latitude:</td>
+		<td colspan="4"><input id="latitude" class="form-control"
+				placeholder="{{ info['adresse']['latitude'] }}" readonly /></td>
+	</tr>
+	<tr style='display:none;'>
+		<td>Longitude:</td>
+		<td colspan="4"><input id="longitude" class="form-control"
+				placeholder="{{ info['adresse']['longitude'] }}" readonly /></td>
+	</tr>
+	<tr id="tr_hidden" style="display:none;">
+		<td>Masquer mon<br/>adresse</td>
+		<td colspan='2'>
+			<input type='radio' name='hidden' value='N'> Non
+			<input type='radio' name='hidden' value='Y'> Oui
+		</td>
+	</tr>
+	<tr>
+		<td><input id="submit_adresse" type="button" class="btn btn-default"
+			 value="Enregistrer" disabled/>
+		</td>
+		<td colspan="4">
+			<span id="s_adresse_info" class="help-block"></span>
+		</td>
+	</tr>
+</table>

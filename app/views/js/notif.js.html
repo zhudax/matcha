@@ -1,0 +1,102 @@
+<script>
+
+var oNotif = ft_getId('notif');
+var oDnotif = ft_getId('dnotif');
+var oUl1 = ft_getId('ul1');
+
+setInterval('getNotifNumber()', 1000);
+function	getNotifNumber()
+{
+	var url = "app/controllers/refreshInfo.php";
+	ft_ajax(url, "action=get_notif", function(response)
+	{
+		var get = response;
+		if (get == 'Error')
+		{
+			ft_redirect("{{path_for('root')}}");
+			return (0);
+		}
+		var aSpan = oNotif.getElementsByTagName('span');
+		if (get != 0)
+		{
+			if (aSpan.length == 1)
+			{
+				var oSpan = document.createElement('span');
+				oSpan.className = "badge";
+				oSpan.innerText = get;
+				oSpan.id = "badge";
+				oNotif.appendChild(oSpan);
+			}
+			var oBadge = ft_getId('badge');
+			oBadge.innerText = get;
+		}
+	})
+}
+
+function	ft_oNotif(ev)
+{
+	var oEvent = ev || event;
+	oEvent.cancelBubble = "true";
+	var aLi = oUl1.getElementsByTagName('li');
+	if (oDnotif.style.display == "")
+		oDnotif.style.display = "none";
+	if (oDnotif.style.display == "none")
+	{
+		oDnotif.style.display = "block";
+		var url = "app/controllers/refreshInfo.php";
+		var data = "uid=" + {{session['uid']}}
+					+ "&action=read_notif";
+		ft_ajax(url, data, function(response)
+		{
+			if (response == "Error")
+			{
+				ft_redirect("{{path_for('root')}}");
+				return (0);
+			}
+			get = JSON.parse(response);
+			if (get.length == 0 && aLi.length == 0)
+			{
+				var oLi = document.createElement('li');
+				oLi.className = "list-group-item";
+				oLi.innerText = "Vous n'avez aucun nouveau message";
+				oUl1.appendChild(oLi);
+			}
+			else
+			{
+				var i = 0;
+				while (i < get.length)
+				{
+					var oLi = document.createElement('li');
+					oLi.className = "list-group-item";
+					oLi.innerText = get[i];
+					oUl1.appendChild(oLi);
+					i++;
+				}
+			}
+		});
+		var aSpan = oNotif.getElementsByTagName('span');
+		if (aSpan.length == 2)
+		{
+			oNotif.removeChild(aSpan[1]);
+		}
+	}
+	else
+	{
+		oDnotif.style.display = "none";
+		var i = 0;
+		while (aLi.length != 0)
+		{
+			oUl1.removeChild(aLi[0]);
+		}
+	}
+}
+
+document.onclick = function()
+{
+	if (oDnotif.style.display == "block")
+	{
+		ft_oNotif();
+	}
+}
+
+</script>

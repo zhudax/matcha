@@ -1,0 +1,42 @@
+<table class="table" style="margin-top:20px;">
+	<tr>
+		<td>
+			{% if not info['profil_photo'] and not info['photos'] %}
+			<div style="display:none">
+			{% endif %}
+				<button id="btn_like" type="button" class="btn btn-default">
+					<span id="span_like"
+						{% if info['like'] %}
+							style="color:red;"
+						{% else %}
+							style="color:grey;"
+						{% endif %}
+						class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+						{% if info['like_retour'] and not info['match'] %}
+							liker de retour
+						{% endif %}
+				</button>
+			{% if info['user']['profil_photo'] or info['user']['photos'] %}
+			</div>
+			{% endif %}
+
+			<span id="friend_info">
+				{% if info['match'] %}
+					Vous etes amis!
+				{% elseif info['like_retour'] %}
+					Cette personne vous a liké
+				{% endif %}
+			</span>
+		</td>
+		<td>
+			<button id="btn_bloquer" type="button" class="btn btn-default btn-xs">
+				bloquer
+			</button>
+		</td>
+		<td>
+			<button id="btn_report" type="button" class="btn btn-default btn-xs">
+				report as fake
+			</button>
+		</td>
+	</tr>
+</table>
